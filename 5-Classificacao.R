@@ -6,7 +6,13 @@
 ###############################################################################
 
 # Resultados do Cluster e junção com dados do IBGE
-Dados.Plusoft = read.csv("resultados/Cluster-Experim-1.csv", sep=";", dec=".");
+Dados.Plusoft = read.csv("resultados/Cluster-Experim-1.csv", sep=",", dec=".");
+Dados.Plusoft = Dados.Plusoft %>%
+  select(-X);
+
+Dados.Plusoft$key = as.character(Dados.Plusoft$CODIGO);
+Dados.Plusoft$Grupo = factor(Dados.Plusoft$Grupo);
+
 # 
 Dados.Municipios = IBGE.Municipios %>%
   left_join(Dados.Plusoft, by=c("key"="key"));
@@ -53,5 +59,6 @@ ModeloClass.Test$GrupoPredProb = ModeloClass.PredProb;
 # Resultado (Matriz de Confusão)
 caret::confusionMatrix(ModeloClass.Test$GrupoPred, ModeloClass.Test$Grupo);
 
-
+# Análise da Curva ROC
+ModeloClass.ROC = pROC::multiclass.roc(ModeloClass.Test$Grupo, ModeloClass.Test$GrupoPredProb);
 

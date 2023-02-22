@@ -19,6 +19,5 @@ library(gridExtra);
 
 # Classificação
 library(C50);
-library(gmodels);
 library(caret);
-
+library(pROC);
