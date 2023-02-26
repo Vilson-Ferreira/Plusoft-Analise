@@ -6,22 +6,29 @@
 ###############################################################################
 
 # Resultados do Cluster e junção com dados do IBGE
-Dados.Plusoft = read.csv("resultados/Cluster-Experim-1.csv", sep=";", dec=".");
+
+
+# Usar para avaliar base gravada
+Dados.Plusoft = read.csv("resultados/Cluster-Experim-1.csv", sep=",", dec=".");
+Dados.Plusoft = Dados.Plusoft %>% select(-X);
+Dados.Plusoft$key = as.character(Dados.Plusoft$key);
+Dados.Plusoft$Grupo = factor(Dados.Plusoft$Grupo);
+
 # 
 Dados.Municipios = IBGE.Municipios %>%
   left_join(Dados.Plusoft, by=c("key"="key"));
 
 
-
 # Avaliação em Box-plot
-Variavel = Dados.Plusoft$AE25A2000;
-VariavelStr = "AE25A2000";
-Caption = "Anos de Estudo, Pop. >25 Anos";
+Variavel = Dados.Plusoft$DD2000;
+VariavelStr = "DD2000";
+Caption = "Densidade Demográfica";
 
 ggplot(Dados.Plusoft, aes(x=Grupo, y={{Variavel}})) +
   geom_boxplot(fill="Navy", alpha=0.6, col="Navy") +
   labs(x="Grupo", y=Caption) +
   theme_minimal();
+
 
 # Avaliação Bivariada
 ggplot(Dados.Plusoft, aes(x=RPC2000, y=IDH2000, col=Grupo)) +
